@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace searchfight2
+namespace searchfight
 {
     class Program
     {
-        static void Main(string[] args)
+        protected static void Main(string[] args)
         {
             if (args.Length > 0)
             {
@@ -15,15 +15,16 @@ namespace searchfight2
                 {
                     Int64 googleValue = 0;
                     Int64 azureValue = 0;
-                    SearchFromEngine.GetInfoFromEngine(args[i], ref googleValue, ref azureValue);
+                    SearchFromEngine.GetInfoFromSearchEngines(args[i], ref googleValue, ref azureValue);
                     Data data = new Data();
                     data.TextSearched = args[i];
                     data.GoogleResult = googleValue;
                     data.AzureResult = azureValue;
                     resultsList.Add(data);
                 }
-
+                //Gets the highest record for google results based on the scored
                 var googleResult = resultsList.OrderByDescending(t => t.GoogleResult).First();
+                //Gets the highest record for azure results based on the scored
                 var azureResult = resultsList.OrderByDescending(t => t.AzureResult).First();
                 var totalResult = resultsList.OrderByDescending(t => t.AzureResult + t.GoogleResult).First();
 

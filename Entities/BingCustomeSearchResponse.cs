@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace searchfight2.Entities
+namespace searchfight.Entities
 {
 
     public class BingCustomSearchResponse
@@ -24,7 +24,6 @@ namespace searchfight2.Entities
         public string url { get; set; }
         public string displayUrl { get; set; }
         public string snippet { get; set; }
-        //public DateTime dateLastCrawled { get; set; }
         public string cachedPageUrl { get; set; }
         public OpenGraphImage openGraphImage { get; set; }
     }

@@ -1,4 +1,4 @@
-﻿using searchfight2.Entities;
+﻿using searchfight.Entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -11,29 +11,37 @@ using System.Threading.Tasks;
 using System.Web;
 
 
-namespace searchfight2
+namespace searchfight
 {
     public class SearchFromEngine
     {
-        const string googleApiURL = "https://www.googleapis.com/";
-        const string googleApiKey = "AIzaSyDgJYXi8EO20Twu6z56DxSl1DwO1nxOUXg";
-        const string googleResource = "customsearch/v1";
-        const string googleSearchEngineId = "dd983846ea5a371da";
 
-        const string azureApiURL = "https://api.bing.microsoft.com/";
-        const string azureResource = "v7.0/search";
-        const string azureApiKey = "2295058b2a3b4be3bc69386049eeca02";
-
-        public static void GetInfoFromEngine(string textToSearch, ref Int64 googleResult, ref Int64 azureResult)
+        /// <summary>
+        /// Gets the Number of Total Results for a given text in Search engines.
+        /// </summary>
+        /// <param name="textToSearch">Text to be searched in engines</param>
+        /// <param name="googleResult">Number of total results in google engine.</param>
+        /// <param name="azureResult">Number of total results in Bing engine.</param>
+        public static void GetInfoFromSearchEngines(string textToSearch, ref Int64 googleResult, ref Int64 azureResult)
         {
+            try
+            {
+                googleResult = GetTotalCountFromGoogle(textToSearch);
+                azureResult = GetTotalCountFromAzure(textToSearch);
+                Console.WriteLine($"{textToSearch}: Google: {googleResult} MSN Search: {azureResult} ");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"There was an error in GetInfoFromSearchEngines. Error Message: {ex.Message} ; StackTrace: {ex.StackTrace} ");
+            }
 
-            googleResult = GetTotalCountFromGoogle(textToSearch);
-
-            azureResult = GetTotalCountFromAzure(textToSearch);
-            Console.WriteLine($"{textToSearch}: Google: {googleResult} MSN Search: {azureResult} ");
 
         }
 
+        /// <summary>
+        /// Gets the Number of Total Results from Google.
+        /// </summary>
+        /// <param name="textToSearch">Text to be searched in engines</param>
         public static Int64 GetTotalCountFromGoogle(string textToSearch)
         {
             Int64 numberOfRows = 0;
@@ -41,15 +49,15 @@ namespace searchfight2
 
             using (var client = new System.Net.Http.HttpClient())
             {
-                client.BaseAddress = new Uri(googleApiURL);
+                client.BaseAddress = new Uri(Constants.googleApiURL);
                 NameValueCollection googleCollection = new NameValueCollection();
-                googleCollection.Add("key", googleApiKey);
-                googleCollection.Add("cx", googleSearchEngineId);
+                googleCollection.Add("key", Constants.googleApiKey);
+                googleCollection.Add("cx", Constants.googleSearchEngineId);
                 googleCollection.Add("q", textToSearch);
                 googleCollection.Add("alt", "json");
                 googleCollection.Add("fields", "queries(request(totalResults))");
 
-                string gooResource = googleResource + ToQueryString(googleCollection);
+                string gooResource = Constants.googleResource + ToQueryString(googleCollection);
                 var response = client.GetAsync(gooResource).Result;
                 string res = "";
                 using (HttpContent content = response.Content)
@@ -75,18 +83,23 @@ namespace searchfight2
 
             return numberOfRows;
         }
+
+        /// <summary>
+        /// Gets the Number of Total Results from Bing.
+        /// </summary>
+        /// <param name="textToSearch">Text to be searched in engines</param>
         public static Int64 GetTotalCountFromAzure(string textToSearch)
         {
             Int64 numberOfRows = 0;
             NameValueCollection azureCollection = new NameValueCollection();
             azureCollection.Add("q", textToSearch);
 
-            string resource = azureResource + ToQueryString(azureCollection);
+            string resource = Constants.azureResource + ToQueryString(azureCollection);
 
             using (var client = new System.Net.Http.HttpClient())
             {
-                client.BaseAddress = new Uri(azureApiURL);
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", azureApiKey);
+                client.BaseAddress = new Uri(Constants.azureApiURL);
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", Constants.azureApiKey);
                 var response = client.GetAsync(resource).Result;
                 string res = "";
                 using (HttpContent content = response.Content)

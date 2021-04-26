@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace searchfight2.Entities
+namespace searchfight.Entities
 {
     public class GoogleData
     {

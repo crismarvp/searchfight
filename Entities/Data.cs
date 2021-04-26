@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace searchfight2
+namespace searchfight
 {
     public class Data
     {
