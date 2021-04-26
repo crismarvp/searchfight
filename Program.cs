@@ -22,10 +22,11 @@ namespace searchfight
                     data.AzureResult = azureValue;
                     resultsList.Add(data);
                 }
-                //Gets the highest record for google results based on the scored
+                //Gets the highest record for google results based on the number of records
                 var googleResult = resultsList.OrderByDescending(t => t.GoogleResult).First();
-                //Gets the highest record for azure results based on the scored
+                //Gets the highest record for azure results based on the number of records
                 var azureResult = resultsList.OrderByDescending(t => t.AzureResult).First();
+                //Gets the highest record for google + azure results based on the number of records
                 var totalResult = resultsList.OrderByDescending(t => t.AzureResult + t.GoogleResult).First();
 
                 Console.WriteLine($"Google winner: {googleResult.TextSearched}");
